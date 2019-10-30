@@ -1,0 +1,14 @@
+备案
+[官方文档](https://docs.oracle.com/javase/specs/)
+[SE8 jvm spec en](https://docs.oracle.com/javase/specs/jvms/se8/html/index.html)
+
+jvm sepc SE8
+1.引言（Introduction|preface）
+2.Java虚拟机结构（jvm structure）
+3.Java虚拟机编译器（jvm compiler）
+4.class文件格式
+5.加载、链接、初始化（load、link、init）
+6.虚拟机指令集
+
+JVM
+内存模型；类的加载、链接、初始化；动态代理+反射+注解；GC
