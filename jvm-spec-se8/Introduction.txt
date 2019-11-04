@@ -1,0 +1,16 @@
+chapter 2: overview of the jvm architecture.
+chapter 3: introduces compilation of code written in the java programming language into instruction set of jvm.
+chapter 5: specifies the start-up of the jvm and the loading, linking, and initialization of classes and interfaces.
+[from 1.3 organization of the specification](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-1.html#jvms-1.3)
+
+Table of Contents
+1. Introduction
+2. The Structure of the JVM
+3. Compiling for the JVM
+4. The class File Format
+5. Loading, Linking, and Initializing
+6. The JVM Instruction Set
+7. Opcode Menmonics by Opcode Index
+
+key 2, 3, 5
+refer 4, 6, 7

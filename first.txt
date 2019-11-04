@@ -11,4 +11,19 @@ jvm sepc SE8
 6.虚拟机指令集
 
 JVM
-内存模型；类的加载、链接、初始化；动态代理+反射+注解；GC
+jvm结构+内存模型；类的加载、链接、初始化；动态代理+反射+注解；GC
+
+jvm的类的加载机制和过程：
+ClassLoader：
+- BootStrap
+- Application
+- Extension
+加载过程：
+- 加载load
+- 链接link
+- 初始化init
+
+GC（Garbage Collection）:
+Java通过 垃圾搜集器（Garbage Collector）回收分配内存
+Collector：
+G1

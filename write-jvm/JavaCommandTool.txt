@@ -1,0 +1,5 @@
+Describes the full set of JDK commands
+[jdk commanads](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/intro.html#sthref18)
+
+java command tool
+[java command ref](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html)

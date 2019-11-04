@@ -1,0 +1,6 @@
+vm:
+- system vm：实例有Vmware、virtualbox，etc
+- program vm：实例有jvm
+
+存在于内存中，是程序虚拟机
+[refer](https://zhuanlan.zhihu.com/p/43183149)

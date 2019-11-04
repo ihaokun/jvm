@@ -1,0 +1,93 @@
+2.5 运行时数据区（RunTime Data Areas）
+
+jvm支持 多线程并发执行
+
+2.5.1 PC寄存器（The PC（Program Counter） Register）：线程私有
+程序计数器 寄存器
+
+每条线程Thread（Task），都有自己的PC register
+
+任意时刻，一条线程只会执行一个方法的代码，该方法被称为 current method
+	若 current不是native的，PC register 保存 正在执行的字节码指令地址
+	若 current 是 native的，PC register 值 为 undefined。
+PC寄存器 容量 应该至少能保存 一个returnAddress类型值 或 一个与平台相关的本地指针值
+
+2.5.2 Java虚拟机栈（JVM Stack）：线程私有
+
+每条线程，都有自己的私有的jvm stack
+						（与 线程 同时创建，用于存储 栈帧（Frame））
+作用（类似C语言）：
+	存储 局部变量 和 部分未计算完的值
+	方法 的 调用 和 返回（递归应用的实例，之前在数据结构书中见到过，就像方法的{}）
+	
+除了 Frame的 入栈 和 出栈 外，jvm stack不受其它因素影响，
+所以 Frame 可以在 堆heap 中分配，jvm stack 所使用的内存不需要保证是连续的（容量可固定，也可扩容）。
+
+两个可能出现异常：
+	- StackOverflow，很常见，经常见到的 堆栈溢出
+		出现于 线程请求分配的栈容量 > jvm stack允许的最大容量 情况。
+	- OutOfMemoryError
+		jvm stack尝试扩展，无法申请到足够内存
+		或
+		新线程创建，无足够内存 创建对应 jvm stack
+		
+2.5.3 Java虚拟机堆（JVM Heap）：线程共享 的 运行时内存区域
+
+提供 所有 类实例 和 数组实例，分配内存的区域
+
+heap 在 JVM启动时 被创建
+	 存储GC所管理的各种对象
+	 
+jvm heap 所使用的内存不需要保证是连续的（容量可固定，也可扩容）。
+
+当实际所需的堆超过GC所能提供的最大容量，JVM会抛出OutOfMemoryError异常。
+
+2.5.4 方法区（Method Area）：线程共享 的 运行时内存区域（同 Heap）
+
+类似于 传统语言的编译代码存储区（storage area for compiled code） 或 操作系统进程的正文段（text segment）
+
+存储 每个类的 结构信息（包含 运行时常量池（runtime constant pool）、字段和方法数据、构造器和普通方法的字节码内容）
+
+在JVM启动时创建（同 JVM Heap），method area 是 heap 的逻辑组成部分。
+
+使用内存可以不连续（同 JVM Heap）
+
+抛出异常（同 JVM Heap）
+
+2.5.5 运行时常量池（Runtime Constant Pool）
+
+类似于 传统语言中的符号表（symbol table）
+
+是class文件中 每个类或接口 的常量池表（constant_pool table）的运行时表示形式
+包含若干种不同常量，编译期可知的数值字面量literal、运行期解析后才可知的方法或字段引用reference
+
+RCP在Method Area中分配；
+加载类或接口到JVM后，就创建对应的RCP
+
+抛出异常（同 JVM Heap）
+更多详细信息可再看chapter5
+
+2.5.6 本地方法栈（Native Method Stack）
+
+native method，指 Java外的language编写的方法。应用实例有：Java中的数组复制方法 和 Math包下一些方法
+native method stack，就是用于支持 native method 的执行
+
+该NMS，JVM可支持也可不支持，若支持则会在 线程创建的时候按线程分配（线程私有）
+
+抛出异常（同 JVM Stack）
+
+2.6 栈帧Frames
+作用：
+1. 用于存储 数据和 部分结果（未完成过程）的 数据结构
+2. 处理 动态链接（dynamic linking）、方法返回值和异常分派（dispatch exception）
+
+组成：
+1. 局部变量表local variables
+2. 操作数栈 operand stack
+3. 指向当前类的运行时常量池（RunTime Constant Pool）的引用reference
+
+生命周期：
+始：随着方法调用而创建
+末：随着方法结束而销毁（不论是正常结束或抛出异常）
+
+2.6.1 局部变量表local variables

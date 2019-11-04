@@ -1,0 +1,62 @@
+JMM(Java Memory Model)
+Java内存模型
+
+《深入理解Java内存模型》InfoQ软件开发丛书
+Understanding the Java Memory Model
+
+Table of Contents
+1.基础 | 概览overview
+2.重排序
+3.顺序一致性
+4.Volitile
+5.Lock
+6.Final
+7.SUMMARY
+
+Chapter 1：
+1.1 并发编程模型的分类
+1.2 Java内存模型的抽象
+1.3 重排序
+1.4 处理器重排序 和 内存屏障指令
+1.5 happens-before
+
+命令式(Command)编程、函数式(Funcational)编程、响应式(Reactive)编程
+OOP(Object-Oriented Programming)、POP(Procedure-Oriented Programming)
+测试驱动TDD(Test-Driven Development)、领域驱动DDD(Domain-Driven Development)
+测试用例Test Case
+
+1.1 Base | Overview
+两个关键问题：
+- 线程通信：线程之间交换信息的机制
+- 线程同步：程序控制 线程之间操作发生相对顺序的 机制
+
+两种并发编程模型：
+- 共享内存（Java采用）
+  通信：隐式，线程之间共享内存的公共状态，通过读写内存中的公共状态来隐式通信（对程序员透明）
+  同步：显式，程序必须显式指定某个方法或某段代码在线程间互斥执行
+- 消息传递
+  通信：显式，线程之间没有公共状态，线程之间必须通过明确的发送消息来进行显式通信
+  同步：隐式，因为消息的发送必须在接收之前，故是隐式进行的
+
+1.2 Abstraction of the JMM
+共享变量：静态域static、实例域、数组元素array elements；存储在 堆heap内存中，线程共享
+非共享：局部变量local、方法定义参数(formal method parameters)和异常处理器参数(Exception handler parameters)；存于栈帧Frame中，线程私有
+
+Java Thread Communication Control by JMM
+主内存（main memory）：
+公共，存储线程间的共享变量
+本地内存（local memory）：
+私有，存储该线程 读写共享变量的copy
+
+1.3 重排序
+为提高执行程序时的性能，编译器和处理器常常对指令做重排序
+三种类型
+1. 编译器优化 的重排序
+   编译器 在不改变单线程程序语义的前提下，调整语句的执行顺序。
+2. 指令级并行 的重排序
+   现代处理器 采用指令集并行技术，将多条指令重叠执行
+3. 内存系统 的重排序
+   由于处理器 使用缓存和读写缓冲区，使得加载和存储操作看上去可能是乱序执行
+
+Java源代码到最终实际执行的指令序列，顺序进行1->2->3种重排序
+

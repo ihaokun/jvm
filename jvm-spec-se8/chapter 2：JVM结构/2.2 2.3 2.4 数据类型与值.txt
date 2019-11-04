@@ -1,0 +1,98 @@
+Specification：规范
+
+Chapter 2：JVM 结构
+unicode.org官网
+
+2.2 数据类型
+两大类
+- 基本类型（primitive type）
+- 引用类型（reference type）
+与之对应，也存在两种类型的值
+基本值（primitive value）
+引用值（reference value）
+它们可用于 变量赋值、参数传递、方法返回、运算操作 等
+
+2.3 基本类型 与 值
+JVM支持的基本类型包括
+- 数值类型（numeric type）
+	- 整数类型（integral type）
+		有符号 二进制补码 整数，默认值为0
+		- byte：8 bit，[-128, 127]
+		- short：16 bit，[-327768, 32767]
+		- int：32 bit
+		- long：64 bit
+		无符号 16 bit整数 表示的 Unicode码点（code point），UTF-16 encode，默认值为Unicode的null码点（'\u0000'）
+		- char：16 bit，[0, 2^16 - 1 = 65535]
+	- 浮点型（floating-point type）
+		默认值 0，集合中元素
+		- float：32 bit
+		- double：64 bit
+- boolean类型
+	- false，默认值
+	- true
+- returnAddress类型
+	仅被jvm的jsr, ret, jsr_w 3个指令使用
+	值是 指向 jvm某个指令（instruction）的操作码（opcode） 的指针。
+	在Java支持的所有基本类型中，只有returnAddress类型不能直接与Java lang中的数据类型对应。
+----------------------------------------------------
+计算Java中1 byte的范围
+Java中使用 补码 表示二进制数（原码的补码是其本身）
+计算过程：
+
+1 byte：8 bit
+符号位：+ 0，- 1
+共可表示 2^8 = 256 个标志
+2^7 = 128
+
+计算：
+0000 0000 0
+0000 0001 1
+...
+0111 1111 2^7 -1 = 127
+1000 0000 推原码为0 1000 0000，故为-128
+1000 0001 推原码为0111 1111，故为-127
+...
+1111 1111 推原码为0000 0001，故为-1
+
+例子中的127+1=-128，形成闭环
+
+2^0 + 2^1 + ... + 2^(n-1) = k
+2^1 + 2^2 + ... + 2^n = 2k
+k = 2^n - 1
+----------------------------------------------------
+2.3.2 浮点类型、取值集合及浮点值【这一节看不太懂，可能需要看看 《编码》、IEEE、计算机基础原理知识】
+5个特殊的数值：
+正数0、负数0、正无穷大、负无穷大
+特殊的 非数字标识 NAN（Not-a-Number）:用于标识一些无效的运算操作，如0/0等情况
+
+jvm实现，必须支持 两种标准的浮点值集合：单精度、双精度 浮点数集合
+		 可选支持 两种扩展的浮点值集合：单精度、双精度 扩展指数集合
+		 
+2.3.3 returnAddress类型与值
+	returnAddress类型不能直接与Java lang中的数据类型对应，而且也无法在程序运行期间更改。
+2.3.4 boolean类型与值
+	jvm虽然定义了boolean类型，但只对它提供了有限的支持
+	jvm没有提供任何boolean值专用的字节码指令
+	Java Expression操作的boolean值，编译后在jvm中使用int值来替代：true用1表示，false用0表示。（注：和二进制相反，0为positive，1为negative；和C lang相同）
+	jvm直接支持boolean[]。boolean[]的访问与修改共用byte[]的baload和bastore指令。
+		oracle的jvm实现，boolean[]会被编码为byte[]，每个boolean元素占8 bit
+
+2.4 引用类型 与 值
+	- class type
+		引用值 指向 动态创建的类实例（class instance）
+	- array type
+		引用值 指向 数组实例（array instance）
+		
+		组件类型（component type）：最外层一维元素类型，可以为任意类型（包含数组）
+		元素类型（element type）：若 component type 是数组，继续取其组件类型，直至得到非数组（基本类型、类类型、接口类型 之一）
+		
+	- interface type
+		引用值 指向 实现了某个接口的 类实例（class instance） 或 接口实例（interface instance）
+	
+	引用值 中特殊的一个：
+		null：
+			表示 该引用 不指向 任何对象
+			起初 不具备任何实际运行期类型， 但可 转化 为 任意的引用类型
+			是引用类型的默认值default
+			
+		jvm specification并未规定null在jvm中用什么编码来实现		
